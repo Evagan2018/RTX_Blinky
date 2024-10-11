@@ -23,15 +23,15 @@ jobs:
         uses: ARM-software/cmsis-actions/armlm@v1
 
       # Build the Release executable for the AC6 compiler
-      - name: Build executable
+      - name: Build release executable
         if: always()
         continue-on-error: true
         working-directory: ./
         run: |
           cbuild Blinky.csolution.yml --packs --context .Release+AVH --rebuild
 
-      # Build the Release executable for the AC6 compiler
-      - name: Build executable
+      # Build the Debug executable for the AC6 compiler
+      - name: Build debug executable
         if: always()
         continue-on-error: true
         working-directory: ./
