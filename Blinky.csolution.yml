@@ -1,33 +1,17 @@
 solution:
-  created-for: cmsis-toolbox@2.2.1
+  created-for: cmsis-toolbox@2.5.0
   description: Simple blinky example
   compiler: AC6
 
-  misc:
-    - for-compiler: AC6
-      C-CPP:
-        - -Wno-macro-redefined
-        - -Wno-pragma-pack
-        - -Wno-parentheses-equality
-      C:
-        - -std=gnu11
-      ASM:
-        - -masm=auto
-      Link:
-        - --entry=Reset_Handler
-        - --info summarysizes
-        - --summary_stderr
-        - --diag_suppress 6314
-        - --diag_suppress 6848
-
   packs:
-    - pack: ARM::CMSIS@>=6.0.0
-    - pack: ARM::CMSIS-RTX@5.8.0
-    - pack: ARM::CMSIS-View@1.1.0
-    - pack: ARM::CMSIS-Compiler@2.0.0
+    - pack: ARM::CMSIS
+    - pack: ARM::CMSIS-RTX
+    - pack: ARM::CMSIS-View
+    - pack: ARM::CMSIS-Compiler
 
     # packs for AVH_MPS3_Corstone-300
-    - pack: ARM::V2M_MPS3_SSE_300_BSP@1.5.0
+    # - pack: ARM::V2M_MPS3_SSE_300_BSP@1.5.0
+    - pack: ARM::V2M_MPS3_SSE_300_BSP
       for-context:
         - +AVH
     # packs for FRDM-K32L3A6
@@ -49,9 +33,8 @@ solution:
 
   build-types:
     - type: Debug
-      optimize: none
+      optimize: debug
       debug: on
-
     - type: Release
       optimize: balanced
       debug: off
@@ -60,7 +43,6 @@ solution:
     - project: ./app/Board/AVH_MPS3_Corstone-300/AVH.cproject.yml
       for-context:
         - +AVH
-
     - project: ./app/Board/FRDM-K32L3A6/FRDM-K32L3A6.cproject.yml
       for-context:
         - +FRDM-K32L3A6

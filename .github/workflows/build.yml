@@ -12,35 +12,28 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Cache packs
-        uses: actions/cache@v3
-        with:
-          key: packs-${{ github.run_id }}
-          restore-keys: packs-
-          path: /home/runner/.cache/arm/packs
+      # https://github.com/ARM-software/cmsis-actions
+      - name: Activate vcpkg
+        uses: ARM-software/cmsis-actions/vcpkg@v1
 
-      # - name: Cache vcpkg
-      #   uses: actions/cache@v3
-      #   with:
-      #     key: vcpkg-${{ github.run_id }}
-      #     restore-keys: vcpkg-
-      #     path: /home/runner/.vcpkg
+      # https://github.com/ARM-software/cmsis-actions
+      - name: Activate Arm tool license
+        uses: ARM-software/cmsis-actions/armlm@v1
 
-      - run: |
-          # Bootstrap and activate vcpkg
-          . <(curl https://aka.ms/vcpkg-init.sh -L)
-          vcpkg x-update-registry --all
-          vcpkg activate
-          
-          # Activate tool license
-          armlm activate -product KEMDK-COM0 -server https://mdk-preview.keil.arm.com
+      # Build the Release executable for the AC6 compiler
+      - name: Build executable
+        if: always()
+        continue-on-error: true
+        working-directory: ./
+        run: |
+          cbuild Blinky.csolution.yml --packs --context .Release+AVH --rebuild
 
-          # Run build
-          cbuild Blinky.csolution.yml --packs --update-rte --context .Debug+AVH
-
-      # - name: Deactivate tool license
-      #   if: always()
-      #   run: |
-      #       armlm deactivate -product KEMDK-COM0
+      # Build the Release executable for the AC6 compiler
+      - name: Build executable
+        if: always()
+        continue-on-error: true
+        working-directory: ./
+        run: |
+          cbuild Blinky.csolution.yml --packs --context .Debug+AVH --rebuild
